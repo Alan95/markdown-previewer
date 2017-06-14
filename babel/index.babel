@@ -1,0 +1,97 @@
+let widthStyle = {width: "500px", height:"1000px", border: "1px solid black", padding:"30px", borderRadius:"5px", order:"0", marginRight: "5px"};
+let widthStyle2 = {width: "500px", height:"1000px", border: "1px solid black", padding:"30px", borderRadius:"5px", order:"-1", marginLeft: "5px"};
+let alignCenter = {textAlign: "center"};
+let prototype = 'Heading\n=======\n\nSub-heading\n-----------\n \n### Another deeper heading\n \nParagraphs are separated\nby a blank line.\n\nLeave 2 spaces at the end of a line to do a  \nline break\n\nText attributes *italic*, **bold**, \n`monospace`, ~~strikethrough~~ .\n\nShopping list:\n\n  * apples\n  * oranges\n  * pears\n\nNumbered list:\n\n  1. apples\n  2. oranges\n  3. pears\n\nThe rain---not the reign---in\nSpain.\n\n *[Herman Fassett](https://freecodecamp.com/hermanfassett)*';
+  
+
+class Input extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {value: prototype};
+    this.changeText = this.changeText.bind(this);
+   }
+ componentWillMount(){
+   
+   this.props.addText(this.state.value);
+   
+   
+ }
+
+
+  changeText(event) {
+    this.setState({
+      value: event.target.value
+    }, function() {
+     this.props.addText(this.state.value);
+  });
+  
+  }
+
+  render() {
+    
+    return(
+      
+      <div style={widthStyle}>
+      <h1>Input</h1>
+      <textarea onChange={this.changeText} value={this.state.value}> </textarea>
+       </div>
+    );
+  }
+  
+}
+
+
+class Output extends React.Component {
+  constructor(props){
+    super(props);
+    this.renderMarked = this.renderMarked.bind(this);
+  }
+  
+  renderMarked(value){
+    let markeded = marked(value , {sanitize: true});
+    return {__html: markeded};
+  }
+
+  render() {
+   
+    return(
+      <div style={widthStyle2} id="textfield">
+      <h1>Ouput</h1>
+     
+      <p dangerouslySetInnerHTML={this.renderMarked(this.props.text)}></p>
+      
+      </div>
+    );
+  }
+  
+ 
+}
+
+ class App extends React.Component {
+   constructor(props){
+     super();
+     this.state = {currValue: ''};
+   }
+   
+   addText(text) {
+    this.setState({
+      currValue: text
+    });
+   }
+   
+   render() {
+     return(
+     <div id="app">
+         <Input addText={this.addText.bind(this)}/>
+         <Output text={this.state.currValue}/>
+     </div>
+     );
+     
+   }
+   
+   
+ }
+
+//ReactDOM.render(<Component />, document.getElementById('textfield'));
+//ReactDOM.render(<Output />, document.getElementById('output'));
+ReactDOM.render(<App />, document.getElementById('window'));
